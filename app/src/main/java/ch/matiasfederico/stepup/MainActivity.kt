@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.matiasfederico.stepup.ui.theme.Footer
+import ch.matiasfederico.stepup.ui.theme.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import ch.matiasfederico.stepup.ui.theme.SummaryScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -117,7 +118,7 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 48.dp, bottom = 64.dp), // Adjusted bottom padding
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -129,12 +130,7 @@ fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
             ) {
-                Text(
-                    text = "StepUp",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                Header()
                 Text(
                     text = "Hello, $username! Daily Summary",
                     fontSize = 24.sp,
