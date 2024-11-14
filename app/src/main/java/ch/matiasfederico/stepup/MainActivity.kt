@@ -1,5 +1,6 @@
 package ch.matiasfederico.stepup
 
+import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -18,15 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
+import ch.matiasfederico.stepup.ui.theme.Footer
+import ch.matiasfederico.stepup.ui.theme.StepupTheme
+import ch.matiasfederico.stepup.ui.theme.SummaryScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -37,6 +36,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     private var sensor: Sensor? = null
     private val counter = MutableStateFlow(0)
+    private lateinit var sharedPrefences: SharedPreferences
+    private var initialStepCount: Float? = null
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +45,14 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         enableEdgeToEdge()
 
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        sharedPrefences = getSharedPreferences("stepup_prefs", MODE_PRIVATE)
+        counter.update { sharedPrefences.getInt("total_steps", 0) }
 
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    val permission = rememberPermissionState(permission = android.Manifest.permission.ACTIVITY_RECOGNITION)
+                    val permission =
+                        rememberPermissionState(permission = android.Manifest.permission.ACTIVITY_RECOGNITION)
                     MainScreen(permission, counter)
                 }
             }
@@ -65,12 +69,22 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     override fun onPause() {
         super.onPause()
         sensorManager.unregisterListener(this)
+
+        sharedPrefences.edit().putInt("total_steps", counter.value).apply()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let { sensorEvent ->
             if (sensorEvent.sensor.type == Sensor.TYPE_STEP_COUNTER) {
-                counter.update { it + 1 }
+                if (initialStepCount == null) {
+                    initialStepCount = sensorEvent.values[0]
+                }
+                val currentStepCount = sensorEvent.values[0] - (initialStepCount ?: 0f)
+                counter.update {
+                    (currentStepCount + sharedPrefences.getInt(
+                        "total_steps", 0
+                    )).toInt()
+                }
             }
         }
     }
@@ -82,7 +96,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainScreen(permission: com.google.accompanist.permissions.PermissionState, counter: MutableStateFlow<Int>) {
+fun MainScreen(
+    permission: com.google.accompanist.permissions.PermissionState,
+    counter: MutableStateFlow<Int>
+) {
     val counterState = counter.collectAsState()
     val steps = counterState.value
     val calorieBurnRate = 0.04
@@ -112,20 +129,43 @@ fun MainScreen(permission: com.google.accompanist.permissions.PermissionState, c
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
             ) {
-                Text(text = "StepUp", fontSize = 32.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 16.dp))
-                Text(text = "Hello, $username! Daily Summary", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
+                Text(
+                    text = "StepUp",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Text(
+                    text = "Hello, $username! Daily Summary",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
                 when {
                     permission.status.isGranted -> {
-                        Text(text = "Steps: $steps / $dailyGoal", fontSize = 24.sp, modifier = Modifier.padding(bottom = 8.dp))
-                        Text(text = "Calories Burned: %.2f".format(caloriesBurned), fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
-                        Text(text = "Daily Goal: $dailyGoal steps", fontSize = 20.sp, modifier = Modifier.padding(bottom = 16.dp))
+                        Text(
+                            text = "Steps: $steps / $dailyGoal",
+                            fontSize = 24.sp,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Calories Burned: %.2f".format(caloriesBurned),
+                            fontSize = 24.sp,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        Text(
+                            text = "Daily Goal: $dailyGoal steps",
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
                         TextField(
                             value = newGoalInput,
                             onValueChange = { newGoalInput = it },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             label = { Text("New Daily Goal") },
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
                         )
                         Button(onClick = {
                             newGoalInput.toIntOrNull()?.let {
@@ -155,108 +195,6 @@ fun MainScreen(permission: com.google.accompanist.permissions.PermissionState, c
             }
             // Add Footer component
             Footer(onDetailsClick = { showDetails = true })
-        }
-    }
-}
-
-@Composable
-fun SummaryScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int, onBack: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "StepUp - Summary",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        Text(
-            text = "Daily Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Steps: $steps / $dailyGoal",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        Text(
-            text = "Weekly Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Total Steps: ${steps * 7}",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned * 7),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        Text(
-            text = "Monthly Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Total Steps: ${steps * 30}",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned * 30),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        Button(onClick = onBack, modifier = Modifier.padding(top = 16.dp)) {
-            Text(text = "Back")
-        }
-    }
-}
-
-@Composable
-fun Footer(onDetailsClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        IconButton(onClick = {
-            // Handle Home button click
-        }) {
-            Icon(Icons.Filled.Home, contentDescription = "Home")
-        }
-
-        Button(onClick = onDetailsClick) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.Info, contentDescription = "Details")
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Details")
-            }
-        }
-
-        IconButton(onClick = {
-            // Handle User Profile button click
-        }) {
-            Icon(Icons.Filled.Person, contentDescription = "User Profile")
         }
     }
 }
