@@ -118,7 +118,7 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 48.dp, bottom = 64.dp), // Adjusted bottom padding
+                .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 64.dp), // Adjusted bottom padding
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
