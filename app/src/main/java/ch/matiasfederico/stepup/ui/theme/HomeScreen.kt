@@ -1,16 +1,21 @@
 package ch.matiasfederico.stepup.ui.theme
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -21,57 +26,45 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
-    username: String,
-    permission: PermissionState,
-    steps: Int,
-    caloriesBurned: Double,
-    dayGoal: Int,
-    input: String
+    username: String, permission: PermissionState, steps: Int, caloriesBurned: Double, dayGoal: Int
 ) {
-    var newGoalInput = input
-    var dailyGoal = dayGoal
 
     Column(
-        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Hello, $username! Daily Summary",
-            fontSize = 24.sp,
+            text = "Hello, $username!",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "Daily Summary",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         when {
             permission.status.isGranted -> {
-                Text(
-                    text = "Steps: $steps / $dailyGoal",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                CircularProgressWithLabel(
+                    steps = steps, dailyGoal = dayGoal
                 )
-                Text(
-                    text = "Calories Burned: %.2f".format(caloriesBurned),
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                Text(
-                    text = "Daily Goal: $dailyGoal steps",
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                TextField(
-                    value = newGoalInput,
-                    onValueChange = { newGoalInput = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = { Text("New Daily Goal") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
-                Button(onClick = {
-                    newGoalInput.toIntOrNull()?.let {
-                        dailyGoal = it
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = "Remaining", fontSize = 20.sp)
+                        Text(text = "${dayGoal - steps}", fontSize = 20.sp)
                     }
-                }) {
-                    Text(text = "Set New Daily Goal")
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = "Calories", fontSize = 20.sp)
+                        Text(text = "%.2f".format(caloriesBurned), fontSize = 20.sp)
+                    }
                 }
             }
 
@@ -90,6 +83,40 @@ fun HomeScreen(
                     Text(text = "Request permission")
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CircularProgressWithLabel(steps: Int, dailyGoal: Int) {
+    val progress = steps.toFloat() / dailyGoal.toFloat()
+
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier
+            .size(250.dp)
+            .padding(16.dp)
+    ) {
+        CircularProgressIndicator(
+            progress = { progress.coerceIn(0f, 1f) },
+            modifier = Modifier.size(230.dp),
+            color = Color(0xFF304474),
+            strokeWidth = 15.dp,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "$steps",
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "/ $dailyGoal",
+                fontSize = 24.sp,
+                color = Color.Gray
+            )
         }
     }
 }

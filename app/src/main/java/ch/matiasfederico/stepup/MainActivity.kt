@@ -112,8 +112,7 @@ fun MainScreen(
     val steps = counterState.value
     val calorieBurnRate = 0.04
     val caloriesBurned = steps * calorieBurnRate
-    var dailyGoal by remember { mutableIntStateOf(6000) }
-    var newGoalInput by remember { mutableStateOf("") }
+    val dailyGoal by remember { mutableIntStateOf(6000) }
     var currentScreen by remember { mutableStateOf("home") }
     val username by remember { mutableStateOf("User") }
 
@@ -136,8 +135,7 @@ fun MainScreen(
                         permission = permission,
                         steps = steps,
                         caloriesBurned = caloriesBurned,
-                        dayGoal = dailyGoal,
-                        input = newGoalInput
+                        dayGoal = dailyGoal
                     )
                 }
 
