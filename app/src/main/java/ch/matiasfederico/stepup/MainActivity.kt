@@ -59,7 +59,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val permission =
                         rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
-                    MainScreen(this, permission, counter)
+
+                    Header()
+                    MainScreen(permission, counter)
+                    Footer(this)
                 }
             }
         }
@@ -103,7 +106,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen(
-    context: android.content.Context,
     permission: PermissionState,
     counter: MutableStateFlow<Int>
 ) {
@@ -123,8 +125,6 @@ fun MainScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Header()
-
         Box(modifier = Modifier.weight(1f)) {
             HomeScreen(
                 username = username,
@@ -134,9 +134,5 @@ fun MainScreen(
                 dayGoal = dailyGoal
             )
         }
-
-        Footer(
-            context = context, steps = steps, caloriesBurned = caloriesBurned, dailyGoal = dailyGoal
-        )
     }
 }

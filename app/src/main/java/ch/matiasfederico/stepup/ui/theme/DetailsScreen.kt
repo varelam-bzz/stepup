@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int) {
+fun DetailsScreen(steps: Int, caloriesBurned: Float, dailyGoal: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +61,7 @@ fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int) {
 }
 
 @Composable
-fun SummaryCard(title: String, steps: Int, caloriesBurned: Double, progress: Float, goal: Int) {
+fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Float, goal: Int) {
     Text(
         text = title,
         fontSize = 16.sp,
@@ -126,7 +126,6 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Double, progress: Flo
                     fontSize = 12.sp,
                 )
             }
-
         }
     }
 }

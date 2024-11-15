@@ -1,9 +1,6 @@
 package ch.matiasfederico.stepup.ui.theme
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,42 +23,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun User() {
-    var currentScreen by remember { mutableStateOf("user") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Header() // Display the header at the top
-
-        Box(modifier = Modifier.weight(1f)) { // Main content area
-            when (currentScreen) {
-                "home" -> {
-                    // Placeholder for Home Screen
-                    Text("Home Screen")
-                }
-
-                "details" -> {
-                    // Placeholder for Details Screen
-                    Text("Details Screen")
-                }
-
-                "user" -> {
-                    // User input form
-                    UserInputForm()
-                }
-            }
-        }
-
-        Footer(context = TODO())
-    }
-}
-
-@Composable
 fun UserInputForm() {
     var username by remember { mutableStateOf(TextFieldValue("")) }
     var dailyStepGoal by remember { mutableStateOf(TextFieldValue("")) }
@@ -72,14 +33,12 @@ fun UserInputForm() {
     ) {
         Text("Username", modifier = Modifier.padding(start = 4.dp))
 
-        TextField(
-            value = username,
+        TextField(value = username,
             onValueChange = { username = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            label = { Text("Enter username") }
-        )
+            label = { Text("Enter username") })
 
         Text("Daily Step Goal", modifier = Modifier.padding(start = 4.dp))
 
@@ -104,8 +63,7 @@ fun UserInputForm() {
                 .padding(top = 12.dp) // Center the button
         ) {
             Text(
-                text = "Want to set a calorie goal?",
-                textDecoration = TextDecoration.Underline
+                text = "Want to set a calorie goal?", textDecoration = TextDecoration.Underline
             )
         }
 
@@ -113,8 +71,7 @@ fun UserInputForm() {
         Button(
             onClick = {
                 // Save preferences or perform any action
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .align(Alignment.CenterHorizontally) // Center the button
                 .padding(top = 16.dp)
         ) {
