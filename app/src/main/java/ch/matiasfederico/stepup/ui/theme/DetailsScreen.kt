@@ -1,5 +1,6 @@
 package ch.matiasfederico.stepup.ui.theme
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ fun DetailsScreen(steps: Int, caloriesBurned: Float, dailyGoal: Int) {
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         SummaryCard(
             title = "Daily Summary",

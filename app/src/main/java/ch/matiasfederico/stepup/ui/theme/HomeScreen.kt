@@ -30,7 +30,6 @@ import com.google.accompanist.permissions.shouldShowRationale
 fun HomeScreen(
     username: String, permission: PermissionState, steps: Int, caloriesBurned: Double, dayGoal: Int
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()

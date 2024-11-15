@@ -10,27 +10,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ch.matiasfederico.stepup.ui.theme.Footer
 import ch.matiasfederico.stepup.ui.theme.Header
 import ch.matiasfederico.stepup.ui.theme.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -59,9 +51,21 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val permission =
                         rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
+                    val counterState = counter.collectAsState()
+                    val steps = counterState.value
+                    val calorieBurnRate = 0.04
+                    val caloriesBurned = steps * calorieBurnRate
+                    val dailyGoal by remember { mutableIntStateOf(6000) }
+                    val username by remember { mutableStateOf("User") }
 
                     Header()
-                    MainScreen(permission, counter)
+                    HomeScreen(
+                        username = username,
+                        permission = permission,
+                        steps = steps,
+                        caloriesBurned = caloriesBurned,
+                        dayGoal = dailyGoal
+                    )
                     Footer(this)
                 }
             }
@@ -100,39 +104,5 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Not yet implemented
-    }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun MainScreen(
-    permission: PermissionState,
-    counter: MutableStateFlow<Int>
-) {
-    val counterState = counter.collectAsState()
-    val steps = counterState.value
-    val calorieBurnRate = 0.04
-    val caloriesBurned = steps * calorieBurnRate
-    val dailyGoal by remember { mutableIntStateOf(6000) }
-    val username by remember { mutableStateOf("User") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp
-            ),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(modifier = Modifier.weight(1f)) {
-            HomeScreen(
-                username = username,
-                permission = permission,
-                steps = steps,
-                caloriesBurned = caloriesBurned,
-                dayGoal = dailyGoal
-            )
-        }
     }
 }
