@@ -22,16 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ch.matiasfederico.stepup.ui.theme.DetailsScreen
 import ch.matiasfederico.stepup.ui.theme.Footer
 import ch.matiasfederico.stepup.ui.theme.Header
 import ch.matiasfederico.stepup.ui.theme.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.theme.UserInputForm
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val permission =
                         rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
-                    MainScreen(permission, counter)
+                    MainScreen(this, permission, counter)
                 }
             }
         }
@@ -106,14 +103,15 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen(
-    permission: PermissionState, counter: MutableStateFlow<Int>
+    context: android.content.Context,
+    permission: PermissionState,
+    counter: MutableStateFlow<Int>
 ) {
     val counterState = counter.collectAsState()
     val steps = counterState.value
     val calorieBurnRate = 0.04
     val caloriesBurned = steps * calorieBurnRate
     val dailyGoal by remember { mutableIntStateOf(6000) }
-    var currentScreen by remember { mutableStateOf("home") }
     val username by remember { mutableStateOf("User") }
 
     Column(
@@ -128,31 +126,17 @@ fun MainScreen(
         Header()
 
         Box(modifier = Modifier.weight(1f)) {
-            when (currentScreen) {
-                "home" -> {
-                    HomeScreen(
-                        username = username,
-                        permission = permission,
-                        steps = steps,
-                        caloriesBurned = caloriesBurned,
-                        dayGoal = dailyGoal
-                    )
-                }
-
-                "details" -> {
-                    DetailsScreen(
-                        steps = steps, caloriesBurned = caloriesBurned, dailyGoal = dailyGoal
-                    )
-                }
-
-                "user" -> {
-                    UserInputForm()
-                }
-            }
+            HomeScreen(
+                username = username,
+                permission = permission,
+                steps = steps,
+                caloriesBurned = caloriesBurned,
+                dayGoal = dailyGoal
+            )
         }
 
-        Footer(currentScreen = currentScreen, onScreenChange = { newScreen ->
-            currentScreen = newScreen
-        })
+        Footer(
+            context = context, steps = steps, caloriesBurned = caloriesBurned, dailyGoal = dailyGoal
+        )
     }
 }

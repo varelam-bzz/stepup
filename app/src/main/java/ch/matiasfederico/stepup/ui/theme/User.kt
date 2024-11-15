@@ -57,10 +57,7 @@ fun User() {
             }
         }
 
-        Footer(
-            currentScreen = currentScreen,
-            onScreenChange = { screen -> currentScreen = screen }
-        ) // Footer navigation
+        Footer(context = TODO())
     }
 }
 

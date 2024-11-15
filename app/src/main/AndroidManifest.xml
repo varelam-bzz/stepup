@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="ch.matiasfederico.stepup.DetailsActivity" />
+        <activity android:name="ch.matiasfederico.stepup.UserActivity" />
     </application>
 
 </manifest>
