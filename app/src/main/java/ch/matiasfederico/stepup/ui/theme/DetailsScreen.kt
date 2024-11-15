@@ -1,10 +1,8 @@
 package ch.matiasfederico.stepup.ui.theme
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,11 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int, onBack: () -> Unit) {
+fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp), // Adjusted bottom padding
+            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
