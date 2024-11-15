@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,9 +33,10 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .padding(bottom = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Hello, $username!",
@@ -71,7 +74,8 @@ fun HomeScreen(
             permission.status.shouldShowRationale -> {
                 Button(onClick = {
                     permission.launchPermissionRequest()
-                }) {
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))
+                ) {
                     Text(text = "Grant permission")
                 }
             }
@@ -79,7 +83,7 @@ fun HomeScreen(
             else -> {
                 Button(onClick = {
                     permission.launchPermissionRequest()
-                }) {
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))) {
                     Text(text = "Request permission")
                 }
             }
@@ -99,7 +103,7 @@ fun CircularProgressWithLabel(steps: Int, dailyGoal: Int) {
         CircularProgressIndicator(
             progress = { progress.coerceIn(0f, 1f) },
             modifier = Modifier.size(230.dp),
-            color = Color(0xFF304474),
+            color = Color(0xFF206584),
             strokeWidth = 15.dp,
             trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
