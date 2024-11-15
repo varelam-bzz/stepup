@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -24,13 +25,18 @@ fun Footer(onDetailsClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(15.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = {
             // Handle Home button click
         }) {
-            Icon(Icons.Filled.Home, contentDescription = "Home")
+            Icon(
+                Icons.Filled.Home,
+                contentDescription = "Home",
+                modifier = Modifier.size(48.dp),
+            )
         }
 
         Button(onClick = onDetailsClick) {
@@ -44,7 +50,11 @@ fun Footer(onDetailsClick: () -> Unit) {
         IconButton(onClick = {
             // Handle User Profile button click
         }) {
-            Icon(Icons.Filled.Person, contentDescription = "User Profile")
+            Icon(
+                Icons.Filled.Person,
+                contentDescription = "User Profile",
+                modifier = Modifier.size(48.dp)
+            )
         }
     }
 }

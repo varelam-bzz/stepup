@@ -14,20 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SummaryScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int, onBack: () -> Unit) {
+fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int, onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
+            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp), // Adjusted bottom padding
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = "StepUp - Summary",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+
+        Header()
         Text(
             text = "Daily Summary",
             fontSize = 24.sp,
@@ -78,9 +73,5 @@ fun SummaryScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int, onBack: ()
             fontSize = 20.sp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
-        Button(onClick = onBack, modifier = Modifier.padding(top = 16.dp)) {
-            Text(text = "Back")
-        }
     }
 }

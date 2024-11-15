@@ -20,7 +20,7 @@ fun Header() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -34,9 +34,7 @@ fun Header() {
             painter = image,
             contentDescription = null,
             modifier = Modifier
-                .size(64.dp)
-                .offset(8.dp)
-                .padding(end = 8.dp),
+                .size(48.dp),
             contentScale = ContentScale.Fit
         )
     }

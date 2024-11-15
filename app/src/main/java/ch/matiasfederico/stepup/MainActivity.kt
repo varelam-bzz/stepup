@@ -19,10 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ch.matiasfederico.stepup.ui.theme.DetailsScreen
 import ch.matiasfederico.stepup.ui.theme.Footer
 import ch.matiasfederico.stepup.ui.theme.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.theme.SummaryScreen
+import ch.matiasfederico.stepup.ui.theme.DetailsScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -111,14 +112,14 @@ fun MainScreen(
     var showDetails by remember { mutableStateOf(false) }
 
     if (showDetails) {
-        SummaryScreen(steps, caloriesBurned, dailyGoal) {
+        DetailsScreen(steps, caloriesBurned, dailyGoal) {
             showDetails = false
         }
     } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 64.dp), // Adjusted bottom padding
+                .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp), // Adjusted bottom padding
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
