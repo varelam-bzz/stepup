@@ -7,12 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import ch.matiasfederico.stepup.ui.theme.CalorieCalculator
 import ch.matiasfederico.stepup.ui.theme.Footer
 import ch.matiasfederico.stepup.ui.theme.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.theme.UserInputForm
 
-class UserActivity : ComponentActivity() {
+class CalorieActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -21,7 +21,7 @@ class UserActivity : ComponentActivity() {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
-                    UserInputForm(this)
+                    CalorieCalculator()
                     Footer(this)
                 }
             }

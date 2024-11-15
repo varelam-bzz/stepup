@@ -1,5 +1,7 @@
 package ch.matiasfederico.stepup.ui.theme
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -13,9 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ch.matiasfederico.stepup.CalorieActivity
 
 @Composable
-fun UserInputForm() {
+fun UserInputForm(context: Context) {
     var username by remember { mutableStateOf(TextFieldValue("")) }
     var dailyStepGoal by remember { mutableStateOf(TextFieldValue("")) }
 
@@ -60,7 +63,9 @@ fun UserInputForm() {
         // Calorie Goal Link
         TextButton(
             onClick = {
-                // Action for setting calorie goal
+                // Creating the Intent to open GoalSettingActivity
+                val intent = Intent(context, CalorieActivity::class.java)
+                context.startActivity(intent)
             },
             colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF206584)),
             modifier = Modifier.padding(top = 12.dp)
