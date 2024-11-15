@@ -1,12 +1,27 @@
 package ch.matiasfederico.stepup.ui.theme
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,60 +31,102 @@ fun DetailsScreen(steps: Int, caloriesBurned: Double, dailyGoal: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 48.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        Header()
-        Text(
-            text = "Daily Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Steps: $steps / $dailyGoal",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
+        SummaryCard(
+            title = "Daily Summary",
+            steps = steps,
+            caloriesBurned = caloriesBurned,
+            progress = steps.toFloat() / dailyGoal,
+            goal = dailyGoal
         )
 
-        Text(
-            text = "Weekly Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Total Steps: ${steps * 7}",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned * 7),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
+        SummaryCard(
+            title = "Weekly Summary",
+            steps = steps * 7,
+            caloriesBurned = caloriesBurned * 7,
+            progress = steps.toFloat() / (dailyGoal * 7),
+            goal = dailyGoal * 7
         )
 
-        Text(
-            text = "Monthly Summary",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
+        SummaryCard(
+            title = "Monthly Summary",
+            steps = steps * 30,
+            caloriesBurned = caloriesBurned * 30,
+            progress = steps.toFloat() / (dailyGoal * 30),
+            goal = dailyGoal * 30
         )
-        Text(
-            text = "Total Steps: ${steps * 30}",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Calories Burned: %.2f".format(caloriesBurned * 30),
-            fontSize = 20.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+    }
+}
+
+@Composable
+fun SummaryCard(title: String, steps: Int, caloriesBurned: Double, progress: Float, goal: Int) {
+    Text(
+        text = title,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth()
+    )
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA))
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            // Steps Row
+            Row(
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = if (progress < 1) Icons.Filled.Close else Icons.Filled.Check,
+                    contentDescription = "Steps",
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Steps:", fontSize = 12.sp, modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "$steps / $goal",
+                    fontSize = 12.sp,
+                )
+            }
+
+            LinearProgressIndicator(
+                progress = { progress.coerceIn(0f, 1f) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(16.dp)
+                    .padding(vertical = 4.dp),
+                color = Color(
+                    0xFF206584
+                ),
+            )
+
+            // Calories Row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = "Calories Burned:", fontSize = 12.sp, modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "%.2f".format(caloriesBurned),
+                    fontSize = 12.sp,
+                )
+            }
+
+        }
     }
 }
