@@ -45,7 +45,7 @@ fun CalorieCalculator() {
         TextField(
             value = if (calories > 0) calories.toString() else "",
             onValueChange = {
-                calories = it.takeIf { it.isDigitsOnly() }?.toIntOrNull() ?: calories
+                calories = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
             },
             modifier = Modifier
                 .fillMaxWidth()
