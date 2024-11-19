@@ -83,7 +83,7 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Floa
             .fillMaxWidth()
             .padding(bottom = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F7FA))
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0EEFA))
     ) {
         Column(
             modifier = Modifier
