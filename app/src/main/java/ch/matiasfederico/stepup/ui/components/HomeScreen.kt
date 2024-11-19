@@ -14,12 +14,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
@@ -28,8 +31,14 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
-    username: String, permission: PermissionState, steps: Int, caloriesBurned: Double, dayGoal: Int
+    permission: PermissionState,
+    steps: Int,
+    caloriesBurned: Double,
+    userViewModel: UserViewModel
 ) {
+    val username by userViewModel.username.observeAsState("")
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +47,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Hello, $username!",
+            text = if (username.isNotEmpty()) "Hello, $username!" else "Hello, User!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
@@ -53,7 +62,7 @@ fun HomeScreen(
             permission.status.isGranted -> {
                 CircularProgressWithLabel(
                     steps = steps,
-                    dailyGoal = dayGoal
+                    dailyGoal = dailyStepGoal
                 )
 
                 Row(
@@ -62,7 +71,7 @@ fun HomeScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Remaining", fontSize = 20.sp)
-                        Text(text = "${dayGoal - steps}", fontSize = 20.sp)
+                        Text(text = "${dailyStepGoal - steps}", fontSize = 20.sp)
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Calories", fontSize = 20.sp)

@@ -20,15 +20,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
 @Composable
-fun DetailsScreen(steps: Int, caloriesBurned: Float, dailyGoal: Int) {
+fun DetailsScreen(
+    steps: Int, userViewModel: UserViewModel
+) {
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    val caloriesBurned = steps * 0.04f
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,24 +48,24 @@ fun DetailsScreen(steps: Int, caloriesBurned: Float, dailyGoal: Int) {
             title = "Daily Summary",
             steps = steps,
             caloriesBurned = caloriesBurned,
-            progress = steps.toFloat() / dailyGoal,
-            goal = dailyGoal
+            progress = steps.toFloat() / dailyStepGoal,
+            goal = dailyStepGoal
         )
 
         SummaryCard(
             title = "Weekly Summary",
             steps = steps * 7,
             caloriesBurned = caloriesBurned * 7,
-            progress = steps.toFloat() / (dailyGoal * 7),
-            goal = dailyGoal * 7
+            progress = steps.toFloat() / (dailyStepGoal * 7),
+            goal = dailyStepGoal * 7
         )
 
         SummaryCard(
             title = "Monthly Summary",
             steps = steps * 30,
             caloriesBurned = caloriesBurned * 30,
-            progress = steps.toFloat() / (dailyGoal * 30),
-            goal = dailyGoal * 30
+            progress = steps.toFloat() / (dailyStepGoal * 30),
+            goal = dailyStepGoal * 30
         )
     }
 }

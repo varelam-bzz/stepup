@@ -16,26 +16,23 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
-fun UserInputForm(context: Context) {
-    var username by remember { mutableStateOf(TextFieldValue("")) }
-    var dailyStepGoal by remember { mutableIntStateOf(0) }
+fun UserInputForm(context: Context, viewModel: UserViewModel) {
+    val username by viewModel.username.observeAsState("")
+    val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
 
     Column(
         modifier = Modifier
@@ -51,12 +48,16 @@ fun UserInputForm(context: Context) {
                 .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(value = username,
-            onValueChange = { username = it },
+        TextField(
+            value = username,
+            onValueChange = {
+                viewModel.saveUsername(it)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            placeholder = { Text("Enter your username") })
+            placeholder = { Text("Enter your username") }
+        )
 
         Text(
             text = "Daily Step Goal",
@@ -65,9 +66,11 @@ fun UserInputForm(context: Context) {
                 .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
+        TextField(
+            value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
             onValueChange = {
-                dailyStepGoal = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
+                val newGoal = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
+                viewModel.saveDailyStepGoal(newGoal)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,10 +79,8 @@ fun UserInputForm(context: Context) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
-        // Calorie Goal Link
         TextButton(
             onClick = {
-                // Creating the Intent to open GoalSettingActivity
                 val intent = Intent(context, CalorieActivity::class.java)
                 context.startActivity(intent)
             },
@@ -93,10 +94,9 @@ fun UserInputForm(context: Context) {
             )
         }
 
-        // Save Button
         Button(
             onClick = {
-                // Save user preferences or perform desired action
+                viewModel.savePreferences()
             },
             modifier = Modifier
                 .fillMaxWidth()

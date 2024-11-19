@@ -10,28 +10,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 class MainActivity : ComponentActivity(), SensorEventListener {
+    private val userViewModel: UserViewModel by viewModels()
     private val sensorManager: SensorManager by lazy {
         getSystemService(SENSOR_SERVICE) as SensorManager
     }
 
+    // TODO: change all of the bottom initialization maybe
     private var sensor: Sensor? = null
     private val counter = MutableStateFlow(0)
     private lateinit var sharedPreferences: SharedPreferences
@@ -42,9 +42,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        sharedPreferences = getSharedPreferences("stepup_prefs", MODE_PRIVATE)
-        counter.update { sharedPreferences.getInt("total_steps", 0) }
+        sensor =
+            sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) // TODO: maybe initialize differently
+        sharedPreferences = getSharedPreferences("StepupPrefs", MODE_PRIVATE)  // TODO: change
+        counter.update { sharedPreferences.getInt("totalSteps", 0) } // TODO: change
 
         setContent {
             StepupTheme {
@@ -55,16 +56,13 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     val steps = counterState.value
                     val calorieBurnRate = 0.04
                     val caloriesBurned = steps * calorieBurnRate
-                    val dailyGoal by remember { mutableIntStateOf(6000) }
-                    val username by remember { mutableStateOf("User") }
 
                     Header()
                     HomeScreen(
-                        username = username,
                         permission = permission,
                         steps = steps,
                         caloriesBurned = caloriesBurned,
-                        dayGoal = dailyGoal
+                        userViewModel = userViewModel
                     )
                     Footer(this)
                 }
@@ -83,7 +81,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         super.onPause()
         sensorManager.unregisterListener(this)
 
-        sharedPreferences.edit().putInt("total_steps", counter.value).apply()
+        sharedPreferences.edit().putInt("totalSteps", counter.value).apply()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -95,7 +93,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 val currentStepCount = sensorEvent.values[0] - (initialStepCount ?: 0f)
                 counter.update {
                     (currentStepCount + sharedPreferences.getInt(
-                        "total_steps", 0
+                        "totalSteps", 0
                     )).toInt()
                 }
             }

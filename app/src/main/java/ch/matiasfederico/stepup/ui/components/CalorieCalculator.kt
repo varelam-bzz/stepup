@@ -23,9 +23,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
 @Composable
-fun CalorieCalculator() {
+fun CalorieCalculator(userViewModel: UserViewModel) {
     var calories by remember { mutableIntStateOf(0) }
 
     Column(
@@ -60,7 +61,8 @@ fun CalorieCalculator() {
 
         Button(
             onClick = {
-                // Save user preferences or perform desired action
+                userViewModel.saveDailyStepGoal(calories * 20)
+                userViewModel.savePreferences()
             },
             modifier = Modifier
                 .fillMaxWidth()
