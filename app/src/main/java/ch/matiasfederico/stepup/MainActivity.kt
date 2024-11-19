@@ -18,9 +18,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import ch.matiasfederico.stepup.ui.theme.Footer
-import ch.matiasfederico.stepup.ui.theme.Header
-import ch.matiasfederico.stepup.ui.theme.HomeScreen
+import ch.matiasfederico.stepup.ui.components.Footer
+import ch.matiasfederico.stepup.ui.components.Header
+import ch.matiasfederico.stepup.ui.components.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState

@@ -1,4 +1,4 @@
-package ch.matiasfederico.stepup.ui.theme
+package ch.matiasfederico.stepup.ui.components
 
 import android.content.Context
 import android.content.Intent

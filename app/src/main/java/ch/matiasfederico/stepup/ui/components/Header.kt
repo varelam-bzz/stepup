@@ -1,4 +1,4 @@
-package ch.matiasfederico.stepup.ui.theme
+package ch.matiasfederico.stepup.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

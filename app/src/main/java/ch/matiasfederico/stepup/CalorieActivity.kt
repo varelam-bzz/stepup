@@ -7,9 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import ch.matiasfederico.stepup.ui.theme.CalorieCalculator
-import ch.matiasfederico.stepup.ui.theme.Footer
-import ch.matiasfederico.stepup.ui.theme.Header
+import ch.matiasfederico.stepup.ui.components.CalorieCalculator
+import ch.matiasfederico.stepup.ui.components.Footer
+import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 
 class CalorieActivity : ComponentActivity() {
