@@ -2,7 +2,14 @@ package ch.matiasfederico.stepup.ui.theme
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -37,8 +44,11 @@ fun Footer(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = {
-                val intent = Intent(context, MainActivity::class.java)
-                context.startActivity(intent)
+                if (context !is MainActivity) {
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    context.startActivity(intent)
+                }
             }) {
                 Icon(
                     Icons.Filled.Home, contentDescription = "Home", modifier = Modifier.size(48.dp)
@@ -49,8 +59,11 @@ fun Footer(
                 modifier = Modifier.padding(start = 32.dp, end = 32.dp)
             ) {
                 Button(onClick = {
-                    val intent = Intent(context, DetailsActivity::class.java)
-                    context.startActivity(intent)
+                    if (context !is DetailsActivity) {
+                        val intent = Intent(context, DetailsActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        context.startActivity(intent)
+                    }
                 }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -63,11 +76,16 @@ fun Footer(
             }
 
             IconButton(onClick = {
-                val intent = Intent(context, UserActivity::class.java)
-                context.startActivity(intent)
+                if (context !is UserActivity) {
+                    val intent = Intent(context, UserActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    context.startActivity(intent)
+                }
             }) {
                 Icon(
-                    Icons.Filled.Person, contentDescription = "User", modifier = Modifier.size(48.dp)
+                    Icons.Filled.Person,
+                    contentDescription = "User",
+                    modifier = Modifier.size(48.dp)
                 )
             }
         }
