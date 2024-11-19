@@ -52,7 +52,8 @@ fun HomeScreen(
         when {
             permission.status.isGranted -> {
                 CircularProgressWithLabel(
-                    steps = steps, dailyGoal = dayGoal
+                    steps = steps,
+                    dailyGoal = dayGoal
                 )
 
                 Row(

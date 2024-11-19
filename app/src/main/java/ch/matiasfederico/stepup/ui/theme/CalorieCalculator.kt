@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 
 @Composable
 fun CalorieCalculator() {
@@ -36,23 +37,25 @@ fun CalorieCalculator() {
     ) {
         Text(
             text = "Calorie Goal",
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
         TextField(
             value = if (calories > 0) calories.toString() else "",
-            onValueChange = { calories = it.toIntOrNull() ?: 0 },
+            onValueChange = {
+                calories = it.takeIf { it.isDigitsOnly() }?.toIntOrNull() ?: calories
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            label = { Text("Calorie goal") },
             placeholder = { Text("Enter your calorie goal") },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
         Text(
-            text = "Required Steps: ${calories * 20}",
-            modifier = Modifier.padding(top = 16.dp)
+            text = "Required Steps: ${calories * 20}", modifier = Modifier.padding(top = 16.dp)
         )
 
         Button(

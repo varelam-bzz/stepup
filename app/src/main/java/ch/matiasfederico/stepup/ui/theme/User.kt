@@ -2,10 +2,24 @@ package ch.matiasfederico.stepup.ui.theme
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,12 +29,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
 
 @Composable
 fun UserInputForm(context: Context) {
     var username by remember { mutableStateOf(TextFieldValue("")) }
-    var dailyStepGoal by remember { mutableStateOf(TextFieldValue("")) }
+    var dailyStepGoal by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -31,31 +46,32 @@ fun UserInputForm(context: Context) {
     ) {
         Text(
             text = "Username",
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(
-            value = username,
+        TextField(value = username,
             onValueChange = { username = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            label = { Text("Username") },
-            placeholder = { Text("Enter your username") }
-        )
+            placeholder = { Text("Enter your username") })
 
         Text(
             text = "Daily Step Goal",
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(
-            value = dailyStepGoal,
-            onValueChange = { dailyStepGoal = it },
+        TextField(value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
+            onValueChange = {
+                dailyStepGoal = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            label = { Text("Daily Step Goal") },
             placeholder = { Text("Enter your daily step goal") },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
