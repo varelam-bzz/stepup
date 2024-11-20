@@ -2,6 +2,7 @@ package ch.matiasfederico.stepup
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -43,15 +44,28 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 
     override fun onResume() {
         super.onResume()
         stepCounterViewModel.startTrackingSteps()
+        stepCounterViewModel.checkAndResetIfNeeded()
+
+        // Log the current state
+        Log.d("MainActivity", "App resumed. Current Daily Steps: ${stepCounterViewModel.dailyStepCount.value}")
+        Log.d(
+            "MainActivity",
+            "Monthly Steps: ${stepCounterViewModel.monthlySteps.value.joinToString()}"
+        )
     }
 
     override fun onPause() {
         super.onPause()
         stepCounterViewModel.stopTrackingSteps()
+
+        // Log on pause
+        Log.d("MainActivity", "App paused. Tracking stopped.")
     }
+
 }

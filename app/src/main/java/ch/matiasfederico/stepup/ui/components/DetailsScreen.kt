@@ -32,14 +32,23 @@ import androidx.compose.ui.unit.sp
 import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
 import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
+fun calcBurnedCalories(steps: Int): Float {
+    return steps * 0.04f
+}
+
 @Composable
 fun DetailsScreen(
-    userViewModel: UserViewModel,
-    stepCounterViewModel: StepCounterViewModel
+    userViewModel: UserViewModel, stepCounterViewModel: StepCounterViewModel
 ) {
     val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
-    val steps by stepCounterViewModel.steps.collectAsState()
-    val caloriesBurned = steps * 0.04f
+    val dailySteps by stepCounterViewModel.dailyStepCount.collectAsState()
+    val dailyCaloriesBurned = calcBurnedCalories(dailySteps)
+
+    val weeklySteps by stepCounterViewModel.weeklyStepCount.collectAsState(0)
+    val weeklyCaloriesBurned = calcBurnedCalories(weeklySteps)
+
+    val monthlySteps by stepCounterViewModel.monthlyStepCount.collectAsState(0)
+    val monthlyCaloriesBurned = calcBurnedCalories(monthlySteps)
 
     Column(
         modifier = Modifier
@@ -50,27 +59,28 @@ fun DetailsScreen(
     ) {
         SummaryCard(
             title = "Daily Summary",
-            steps = steps,
-            caloriesBurned = caloriesBurned,
-            progress = steps.toFloat() / dailyStepGoal,
+            steps = dailySteps,
+            caloriesBurned = dailyCaloriesBurned,
+            progress = dailySteps.toFloat() / dailyStepGoal,
             goal = dailyStepGoal
         )
 
         SummaryCard(
             title = "Weekly Summary",
-            steps = steps * 7,
-            caloriesBurned = caloriesBurned * 7,
-            progress = steps.toFloat() / (dailyStepGoal * 7),
+            steps = weeklySteps,
+            caloriesBurned = weeklyCaloriesBurned,
+            progress = weeklySteps.toFloat() / (dailyStepGoal * 7),
             goal = dailyStepGoal * 7
         )
 
         SummaryCard(
             title = "Monthly Summary",
-            steps = steps * 30,
-            caloriesBurned = caloriesBurned * 30,
-            progress = steps.toFloat() / (dailyStepGoal * 30),
+            steps = monthlySteps,
+            caloriesBurned = monthlyCaloriesBurned,
+            progress = monthlySteps.toFloat() / (dailyStepGoal * 30),
             goal = dailyStepGoal * 30
         )
+
     }
 }
 

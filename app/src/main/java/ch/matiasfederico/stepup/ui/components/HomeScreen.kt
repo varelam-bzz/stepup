@@ -29,6 +29,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.shouldShowRationale
+import kotlin.math.max
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -39,7 +40,7 @@ fun HomeScreen(
 ) {
     val username by userViewModel.username.observeAsState("")
     val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
-    val steps by stepCounterViewModel.steps.collectAsState()
+    val steps by stepCounterViewModel.dailyStepCount.collectAsState()
     val caloriesBurned = steps * 0.04f
 
     Column(
@@ -74,7 +75,7 @@ fun HomeScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Remaining", fontSize = 20.sp)
-                        Text(text = "${dailyStepGoal - steps}", fontSize = 20.sp)
+                        Text(text = "${max(dailyStepGoal - steps, 0)}", fontSize = 20.sp)
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Calories", fontSize = 20.sp)
@@ -99,6 +100,11 @@ fun HomeScreen(
                     Text(text = "Request permission")
                 }
             }
+        }
+        Button(onClick = {
+            stepCounterViewModel.forceDailyResetForTesting()
+        }) {
+            Text("Simulate Day Reset")
         }
     }
 }
