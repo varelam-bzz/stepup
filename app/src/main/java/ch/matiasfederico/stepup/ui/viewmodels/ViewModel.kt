@@ -9,15 +9,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class UserViewModel(application: Application) : AndroidViewModel(application) {
+class ViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("StepupPrefs", Context.MODE_PRIVATE)
 
     private val _username =
-        MutableLiveData<String>(sharedPreferences.getString("username", "") ?: "")
+        MutableLiveData(sharedPreferences.getString("username", "") ?: "")
     val username: LiveData<String> get() = _username
 
-    private val _dailyStepGoal = MutableLiveData<Int>(sharedPreferences.getInt("dailyStepGoal", 0))
+    private val _dailyStepGoal = MutableLiveData(sharedPreferences.getInt("dailyStepGoal", 0))
     val dailyStepGoal: LiveData<Int> get() = _dailyStepGoal
 
     fun saveUsername(newUsername: String) {
@@ -28,7 +28,6 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     fun saveDailyStepGoal(newGoal: Int) {
         viewModelScope.launch {
-            sharedPreferences.edit().putInt("dailyStepGoal", newGoal).apply()
             _dailyStepGoal.value = newGoal
         }
     }

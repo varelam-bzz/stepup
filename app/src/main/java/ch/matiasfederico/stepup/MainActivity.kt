@@ -19,14 +19,14 @@ import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 class MainActivity : ComponentActivity(), SensorEventListener {
-    private val userViewModel: UserViewModel by viewModels()
+    private val viewModel: ViewModel by viewModels()
     private val sensorManager: SensorManager by lazy {
         getSystemService(SENSOR_SERVICE) as SensorManager
     }
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         permission = permission,
                         steps = steps,
                         caloriesBurned = caloriesBurned,
-                        userViewModel = userViewModel
+                        viewModel = viewModel
                     )
                     Footer(this)
                 }

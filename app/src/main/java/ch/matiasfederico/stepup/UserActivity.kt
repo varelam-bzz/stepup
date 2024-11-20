@@ -12,10 +12,10 @@ import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.UserInputForm
 import ch.matiasfederico.stepup.ui.components.Footer
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 
 class UserActivity : ComponentActivity() {
-    private val userViewModel: UserViewModel by viewModels()
+    private val viewModel: ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class UserActivity : ComponentActivity() {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
-                    UserInputForm(this, userViewModel)
+                    UserInputForm(this, viewModel)
                     Footer(this)
                 }
             }

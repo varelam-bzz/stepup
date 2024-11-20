@@ -14,10 +14,10 @@ import ch.matiasfederico.stepup.ui.components.DetailsScreen
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 
 class DetailsActivity : ComponentActivity() {
-    private val userViewModel: UserViewModel by viewModels()
+    private val viewModel: ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class DetailsActivity : ComponentActivity() {
                     Header()
                     DetailsScreen(
                         steps = steps,
-                        userViewModel = userViewModel
+                        viewModel = viewModel
                     )
                     Footer(this)
                 }

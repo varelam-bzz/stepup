@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +36,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
 
 @Composable
-fun UserInputForm(context: Context, viewModel: UserViewModel) {
+fun UserInputForm(context: Context, viewModel: ViewModel) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
     val username by viewModel.username.observeAsState("")
@@ -105,7 +105,7 @@ fun UserInputForm(context: Context, viewModel: UserViewModel) {
         if (showToast) {
             ShowToast(
                 context,
-                "Successfully saved username and daily step goal!",
+                toastMessage,
                 true
             )
             LaunchedEffect(Unit) {
@@ -122,7 +122,6 @@ fun UserInputForm(context: Context, viewModel: UserViewModel) {
                 } else {
                     "Failed to save username and daily step goal."
                 }
-
             },
             modifier = Modifier
                 .fillMaxWidth()

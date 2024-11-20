@@ -28,13 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 
 @Composable
 fun DetailsScreen(
-    steps: Int, userViewModel: UserViewModel
+    steps: Int, viewModel: ViewModel
 ) {
-    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
     val caloriesBurned = steps * 0.04f
 
     Column(

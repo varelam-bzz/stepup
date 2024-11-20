@@ -1,5 +1,7 @@
 package ch.matiasfederico.stepup.ui.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,10 +27,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import kotlinx.coroutines.delay
 
 @Composable
-fun CalorieCalculator(userViewModel: UserViewModel) {
+fun CalorieCalculator(context: Context, viewModel: ViewModel) {
+    var showToast by remember { mutableStateOf(false) }
+    var toastMessage by remember { mutableStateOf("") }
     var calories by remember { mutableIntStateOf(0) }
 
     Column(
@@ -59,10 +66,27 @@ fun CalorieCalculator(userViewModel: UserViewModel) {
             text = "Required Steps: ${calories * 20}", modifier = Modifier.padding(top = 16.dp)
         )
 
+        if (showToast) {
+            ShowToast(
+                context,
+                toastMessage,
+                true
+            )
+            LaunchedEffect(Unit) {
+                delay(Toast.LENGTH_LONG.toLong())
+                showToast = false
+            }
+        }
+
         Button(
             onClick = {
-                userViewModel.saveDailyStepGoal(calories * 20)
-                userViewModel.savePreferences()
+                showToast = true
+                viewModel.saveDailyStepGoal(calories * 20)
+                toastMessage = if (viewModel.savePreferences()) {
+                    "Successfully saved daily step goal!"
+                } else {
+                    "Failed to daily step goal."
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
@@ -34,10 +34,10 @@ fun HomeScreen(
     permission: PermissionState,
     steps: Int,
     caloriesBurned: Double,
-    userViewModel: UserViewModel
+    viewModel: ViewModel
 ) {
-    val username by userViewModel.username.observeAsState("")
-    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    val username by viewModel.username.observeAsState("")
+    val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
 
     Column(
         modifier = Modifier
