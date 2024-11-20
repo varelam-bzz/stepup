@@ -7,6 +7,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,10 +55,8 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun saveStepsToPreferences() {
-        sharedPreferences.edit()
-            .putFloat("lastSavedCumulativeSteps", initialStepCount ?: 0f)
-            .putInt("totalSteps", _steps.value)
-            .apply()
+        sharedPreferences.edit().putFloat("lastSavedCumulativeSteps", initialStepCount ?: 0f)
+            .putInt("totalSteps", _steps.value).apply()
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -72,6 +71,11 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
                 // Calculate steps since the initial count
                 val stepsTaken = (currentCumulativeSteps - (initialStepCount ?: 0f)).toInt()
                 _steps.update { stepsTaken }
+
+                Log.i(
+                    "StepCount test",
+                    "Sensor Value: ${currentCumulativeSteps}, Current Steps: $stepsTaken"
+                )
             }
         }
     }
