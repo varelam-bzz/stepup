@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,13 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
 @Composable
 fun DetailsScreen(
-    steps: Int, viewModel: ViewModel
+    userViewModel: UserViewModel,
+    stepCounterViewModel: StepCounterViewModel
 ) {
-    val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    val steps by stepCounterViewModel.steps.collectAsState()
     val caloriesBurned = steps * 0.04f
 
     Column(

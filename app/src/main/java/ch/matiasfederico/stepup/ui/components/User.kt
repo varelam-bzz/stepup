@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
-import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,11 +36,11 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
 
 @Composable
-fun UserInputForm(context: Context, viewModel: ViewModel) {
+fun UserInputForm(context: Context, userViewModel: UserViewModel) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
-    val username by viewModel.username.observeAsState("")
-    val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
+    val username by userViewModel.username.observeAsState("")
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
 
     Column(
         modifier = Modifier
@@ -59,7 +59,7 @@ fun UserInputForm(context: Context, viewModel: ViewModel) {
         TextField(
             value = username,
             onValueChange = {
-                viewModel.saveUsername(it)
+                userViewModel.saveUsername(it)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,7 +78,7 @@ fun UserInputForm(context: Context, viewModel: ViewModel) {
             value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
             onValueChange = {
                 val newGoal = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
-                viewModel.saveDailyStepGoal(newGoal)
+                userViewModel.saveDailyStepGoal(newGoal)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,7 +117,7 @@ fun UserInputForm(context: Context, viewModel: ViewModel) {
         Button(
             onClick = {
                 showToast = true
-                toastMessage = if (viewModel.savePreferences()) {
+                toastMessage = if (userViewModel.savePreferences()) {
                     "Successfully saved username and daily step goal!"
                 } else {
                     "Failed to save username and daily step goal."

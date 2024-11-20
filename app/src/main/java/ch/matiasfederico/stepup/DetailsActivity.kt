@@ -1,7 +1,5 @@
 package ch.matiasfederico.stepup
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,31 +12,37 @@ import ch.matiasfederico.stepup.ui.components.DetailsScreen
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
 class DetailsActivity : ComponentActivity() {
-    private val viewModel: ViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
+    private val stepCounterViewModel: StepCounterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val sharedPreferences: SharedPreferences =
-            getSharedPreferences("StepUpPrefs", Context.MODE_PRIVATE)
-
-        val steps = sharedPreferences.getInt("steps", 0)
 
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
                     DetailsScreen(
-                        steps = steps,
-                        viewModel = viewModel
+                        userViewModel = userViewModel, stepCounterViewModel = stepCounterViewModel
                     )
                     Footer(this)
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        stepCounterViewModel.startTrackingSteps()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stepCounterViewModel.stopTrackingSteps()
     }
 }

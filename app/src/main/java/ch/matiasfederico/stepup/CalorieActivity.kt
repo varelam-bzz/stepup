@@ -12,10 +12,10 @@ import ch.matiasfederico.stepup.ui.components.CalorieCalculator
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 
 class CalorieActivity : ComponentActivity() {
-    private val viewModel: ViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class CalorieActivity : ComponentActivity() {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
-                    CalorieCalculator(this, viewModel)
+                    CalorieCalculator(this, userViewModel)
                     Footer(this)
                 }
             }

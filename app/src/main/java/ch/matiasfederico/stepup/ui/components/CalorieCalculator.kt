@@ -27,11 +27,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
-import ch.matiasfederico.stepup.ui.viewmodels.ViewModel
+import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun CalorieCalculator(context: Context, viewModel: ViewModel) {
+fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
     var calories by remember { mutableIntStateOf(0) }
@@ -81,8 +81,8 @@ fun CalorieCalculator(context: Context, viewModel: ViewModel) {
         Button(
             onClick = {
                 showToast = true
-                viewModel.saveDailyStepGoal(calories * 20)
-                toastMessage = if (viewModel.savePreferences()) {
+                userViewModel.saveDailyStepGoal(calories * 20)
+                toastMessage = if (userViewModel.savePreferences()) {
                     "Successfully saved daily step goal!"
                 } else {
                     "Failed to daily step goal."
