@@ -2,6 +2,7 @@ package ch.matiasfederico.stepup.ui.components
 
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,9 +30,15 @@ import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
 import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 
 @Composable
 fun UserInputForm(context: Context, viewModel: UserViewModel) {
+    var showToast by remember { mutableStateOf(false) }
+    var toastMessage by remember { mutableStateOf("") }
     val username by viewModel.username.observeAsState("")
     val dailyStepGoal by viewModel.dailyStepGoal.observeAsState(0)
 
@@ -94,9 +102,27 @@ fun UserInputForm(context: Context, viewModel: UserViewModel) {
             )
         }
 
+        if (showToast) {
+            ShowToast(
+                context,
+                "Successfully saved username and daily step goal!",
+                true
+            )
+            LaunchedEffect(Unit) {
+                delay(Toast.LENGTH_LONG.toLong())
+                showToast = false
+            }
+        }
+
         Button(
             onClick = {
-                viewModel.savePreferences()
+                showToast = true
+                toastMessage = if (viewModel.savePreferences()) {
+                    "Successfully saved username and daily step goal!"
+                } else {
+                    "Failed to save username and daily step goal."
+                }
+
             },
             modifier = Modifier
                 .fillMaxWidth()
