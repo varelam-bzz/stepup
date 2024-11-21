@@ -16,7 +16,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import java.util.Calendar
 
-class StepCounterViewModel(application: Application) : AndroidViewModel(application), SensorEventListener {
+class StepCounterViewModel(application: Application) : AndroidViewModel(application),
+    SensorEventListener {
 
     private val sensorManager: SensorManager =
         application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -47,21 +48,21 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
         _dailySteps.value = sharedPreferences.getInt("dailySteps", 0)
         lastResetDay = sharedPreferences.getInt("lastResetDay", -1)
 
-        val savedMonthlySteps = sharedPreferences.getString("monthlySteps", null)
-        if (savedMonthlySteps != null) {
-            val stepsArray = savedMonthlySteps.split(",").mapNotNull { it.toIntOrNull() }.toIntArray()
-            if (stepsArray.size == 30) {
-                _monthlySteps.update { stepsArray }
-            }
+        val savedMonthlySteps = sharedPreferences.getString("monthlySteps", null) ?: return
+
+        val stepsArray = savedMonthlySteps.split(",").mapNotNull { it.toIntOrNull() }.toIntArray()
+
+        if (stepsArray.size == 30) {
+            _monthlySteps.update { stepsArray }
         }
 
         if (_dailySteps.value > 0) {
-            initialStepCount = sharedPreferences.getFloat("initialStepCount", 0f)
-            hasInitialStepCount = true
+            initialStepCount = sharedPreferences.getFloat("initialStepCount", 0f).takeIf { it > 0 }
+            hasInitialStepCount = initialStepCount != null
         }
     }
 
-    private fun saveData() {
+    fun saveData() {
         with(sharedPreferences.edit()) {
             putInt("dailySteps", _dailySteps.value)
             putInt("lastResetDay", lastResetDay)
@@ -69,7 +70,10 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
             initialStepCount?.let { putFloat("initialStepCount", it) }
             apply()
         }
-        Log.d("StepCounterViewModel", "Data saved. Monthly Steps: ${_monthlySteps.value.joinToString()}")
+        Log.d(
+            "StepCounterViewModel",
+            "Data saved. Monthly Steps: ${_monthlySteps.value.joinToString()}"
+        )
     }
 
     fun startTrackingSteps() {
@@ -80,32 +84,39 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
 
     fun stopTrackingSteps() {
         sensorManager.unregisterListener(this)
-        saveData()
     }
 
     fun checkAndResetIfNeeded() {
         val today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
-        Log.d("StepCounterViewModel", "Checking reset: LastResetDay = $lastResetDay, Today = $today")
+        val daysSinceLastReset = (today - lastResetDay + 365) % 365
+        Log.d(
+            "StepCounterViewModel", "Checking reset: LastResetDay = $lastResetDay, Today = $today"
+        )
 
-        if (lastResetDay != today) {
-            shiftMonthlySteps()
+        if (daysSinceLastReset > 0) {
+            repeat(daysSinceLastReset) { shiftMonthlySteps() }
             resetDailySteps()
             lastResetDay = today
             saveData()
-            Log.d("StepCounterViewModel", "Reset complete. Updated Monthly Steps: ${_monthlySteps.value.joinToString()}")
+            Log.d(
+                "StepCounterViewModel",
+                "Reset complete. Updated Monthly Steps: ${_monthlySteps.value.joinToString()}"
+            )
         }
     }
 
     private fun resetDailySteps() {
-        Log.d("StepCounterViewModel", "Resetting daily steps. Previous daily steps: ${_dailySteps.value}")
+        Log.d(
+            "StepCounterViewModel",
+            "Resetting daily steps. Previous daily steps: ${_dailySteps.value}"
+        )
         initialStepCount = null
         hasInitialStepCount = false
         _dailySteps.update { 0 }
 
-        // Reset today's value in the monthly steps array
         _monthlySteps.update { stepsArray ->
-            stepsArray.apply {
-                this[0] = 0 // Reset today's step count
+            stepsArray.copyOf().apply {
+                this[0] = 0
             }
         }
         Log.d("StepCounterViewModel", "Today's value in monthly steps array reset to 0.")
@@ -114,50 +125,50 @@ class StepCounterViewModel(application: Application) : AndroidViewModel(applicat
     private fun shiftMonthlySteps() {
         val updatedSteps = _monthlySteps.value.copyOf()
         val todaySteps = _dailySteps.value
-        Log.d("StepCounterViewModel", "Shifting monthly steps. Today's steps: $todaySteps")
-
         for (i in updatedSteps.size - 1 downTo 1) {
             updatedSteps[i] = updatedSteps[i - 1]
         }
-
         updatedSteps[0] = todaySteps
         _monthlySteps.update { updatedSteps }
-
         Log.d("StepCounterViewModel", "Updated monthly steps array: ${updatedSteps.joinToString()}")
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        event?.let { sensorEvent ->
-            if (sensorEvent.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+        try {
+            event?.let { sensorEvent ->
+                if (sensorEvent.sensor.type != Sensor.TYPE_STEP_COUNTER) {
+                    return
+                }
+
                 val currentCumulativeSteps = sensorEvent.values[0]
 
-                if (!hasInitialStepCount) {
+                if (!hasInitialStepCount || currentCumulativeSteps < initialStepCount!!) {
                     initialStepCount = currentCumulativeSteps
                     hasInitialStepCount = true
                     Log.d("StepCounterViewModel", "Initial Step Count set to $initialStepCount")
-                }
-
-                if (currentCumulativeSteps < initialStepCount!!) {
-                    initialStepCount = currentCumulativeSteps
-                    Log.d("StepCounterViewModel", "Sensor reset detected. Initial Step Count updated.")
                 }
 
                 val stepsSinceLastReset = (currentCumulativeSteps - initialStepCount!!).toInt()
                 _dailySteps.update { stepsSinceLastReset }
 
                 _monthlySteps.update { stepsArray ->
-                    stepsArray.also { it[0] = stepsSinceLastReset }
+                    stepsArray.apply { this[0] = stepsSinceLastReset }
                 }
 
                 saveData()
             }
+        } catch (e: Exception) {
+            Log.e("StepCounterViewModel", "Error processing sensor data", e)
         }
     }
 
     fun forceDailyResetForTesting() {
         lastResetDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - 1
         checkAndResetIfNeeded()
-        Log.d("StepCounterViewModel", "Forced reset triggered. Monthly Steps: ${_monthlySteps.value.joinToString()}")
+        Log.d(
+            "StepCounterViewModel",
+            "Forced reset triggered. Monthly Steps: ${_monthlySteps.value.joinToString()}"
+        )
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
