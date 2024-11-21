@@ -18,6 +18,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,19 +33,16 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
 
 @Composable
 fun UserInputForm(context: Context, userViewModel: UserViewModel) {
-    var showToast by remember { mutableStateOf(false) }
-    var toastMessage by remember { mutableStateOf("") }
-    var isSuccess by remember { mutableStateOf(false) }
-    val username by userViewModel.username.observeAsState("")
-    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    var showToast by remember { mutableStateOf(false) } // State to control toast visibility
+    var toastMessage by remember { mutableStateOf("") } // Message to display in the toast
+    var isSuccess by remember { mutableStateOf(false) } // Indicates if operation was successful
+
+    val username by userViewModel.username.observeAsState("") // Observes the username
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0) // Observes the daily step goal
 
     Column(
         modifier = Modifier
@@ -50,6 +51,7 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Username input field
         Text(
             text = "Username",
             modifier = Modifier
@@ -57,17 +59,14 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
                 .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(
-            value = username,
-            onValueChange = {
-                userViewModel.saveUsername(it)
-            },
+        TextField(value = username,
+            onValueChange = { userViewModel.saveUsername(it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            placeholder = { Text("Enter your username") }
-        )
+            placeholder = { Text("Enter your username") })
 
+        // Daily Step Goal input field
         Text(
             text = "Daily Step Goal",
             modifier = Modifier
@@ -75,8 +74,7 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
                 .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
-        TextField(
-            value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
+        TextField(value = if (dailyStepGoal > 0) dailyStepGoal.toString() else "",
             onValueChange = {
                 val newGoal = it.takeIf { it.isDigitsOnly() && it.isNotEmpty() }?.toIntOrNull() ?: 0
                 userViewModel.saveDailyStepGoal(newGoal)
@@ -88,6 +86,7 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
+        // Link to the calorie activity
         TextButton(
             onClick = {
                 val intent = Intent(context, CalorieActivity::class.java)
@@ -103,18 +102,16 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
             )
         }
 
+        // Show toast message if required
         if (showToast) {
-            ShowToast(
-                context,
-                toastMessage,
-                isSuccess
-            )
+            ShowToast(context, toastMessage, isSuccess)
             LaunchedEffect(Unit) {
                 delay(Toast.LENGTH_LONG.toLong())
                 showToast = false
             }
         }
 
+        // Button to save the username and daily step goal
         Button(
             onClick = {
                 if (userViewModel.savePreferences()) {

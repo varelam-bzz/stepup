@@ -19,14 +19,14 @@ class CalorieActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enable immersive mode
 
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Header()
-                    CalorieCalculator(this, userViewModel)
-                    Footer(this, clearPreviousActivity = { this.finish() })
+                    Header() // Display the app header
+                    CalorieCalculator(this, userViewModel) // Display calorie calculator UI
+                    Footer(this, clearPreviousActivity = { this.finish() }) // Footer navigation
                 }
             }
         }

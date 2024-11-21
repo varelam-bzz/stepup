@@ -13,45 +13,38 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("StepupPrefs", Context.MODE_PRIVATE)
 
-    private val _username =
-        MutableLiveData(sharedPreferences.getString("username", "") ?: "")
-    val username: LiveData<String> get() = _username
+    private val _username = MutableLiveData(sharedPreferences.getString("username", "") ?: "")
+    val username: LiveData<String> get() = _username // Observable username
 
-    private val _dailyStepGoal = MutableLiveData(sharedPreferences.getInt("dailyStepGoal", 0))
-    val dailyStepGoal: LiveData<Int> get() = _dailyStepGoal
+    private val _dailyStepGoal = MutableLiveData(sharedPreferences.getInt("dailyStepGoal", 6000))
+    val dailyStepGoal: LiveData<Int> get() = _dailyStepGoal // Observable daily step goal
 
     fun saveUsername(newUsername: String) {
+        // Save username locally and update live data
         viewModelScope.launch {
             _username.value = newUsername
         }
     }
 
     fun saveDailyStepGoal(newGoal: Int) {
+        // Save daily step goal locally and update live data
         viewModelScope.launch {
             _dailyStepGoal.value = newGoal
         }
     }
 
     fun savePreferences(): Boolean {
-        try {
-            val usernameValue = username.value
-            if (usernameValue.isNullOrEmpty()) {
-                throw IllegalArgumentException("Username cannot be null or empty")
-            } else {
-                sharedPreferences.edit().putString("username", usernameValue).apply()
+        // Persist user data to SharedPreferences
+        return try {
+            sharedPreferences.edit().apply {
+                putString("username", _username.value)
+                putInt("dailyStepGoal", _dailyStepGoal.value ?: 0)
+                apply()
             }
-
-            dailyStepGoal.value?.let {
-                if (it <= 0) {
-                    throw IllegalArgumentException("Daily Step Goal must be a positive number")
-                } else {
-                    sharedPreferences.edit().putInt("dailyStepGoal", it).apply()
-                }
-            } ?: throw IllegalArgumentException("Daily Step Goal cannot be null")
-            return true
+            true // Successful save
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false // Failed save
         }
     }
 }

@@ -51,6 +51,8 @@ fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
                 .padding(top = 16.dp),
             textAlign = TextAlign.Left
         )
+
+        // Input field for the user to enter a calorie goal
         TextField(
             value = if (calories > 0) calories.toString() else "",
             onValueChange = {
@@ -63,22 +65,21 @@ fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
+        // Display required steps based on calorie input
         Text(
             text = "Required Steps: ${calories * 20}", modifier = Modifier.padding(top = 16.dp)
         )
 
+        // Show a toast message if needed
         if (showToast) {
-            ShowToast(
-                context,
-                toastMessage,
-                isSuccess
-            )
+            ShowToast(context, toastMessage, isSuccess)
             LaunchedEffect(Unit) {
                 delay(Toast.LENGTH_LONG.toLong())
                 showToast = false
             }
         }
 
+        // Button to set and save the step goal
         Button(
             onClick = {
                 showToast = true

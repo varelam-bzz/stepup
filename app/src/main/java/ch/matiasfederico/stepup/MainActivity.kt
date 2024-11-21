@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enable immersive UI features for modern Android devices
 
         setContent {
             StepupTheme {
@@ -35,27 +35,27 @@ class MainActivity : ComponentActivity() {
                     val permission =
                         rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
 
-                    Header()
+                    Header() // Displays the app's header with title and logo
                     HomeScreen(
                         permission = permission,
                         userViewModel = userViewModel,
                         stepCounterViewModel = stepCounterViewModel
-                    )
-                    Footer(this, clearPreviousActivity = { this.finish() })
+                    ) // Main screen UI components
+                    Footer(
+                        this,
+                        clearPreviousActivity = { this.finish() }) // Footer with navigation buttons
                 }
             }
-
-
-
-
         }
     }
 
+    // Resume lifecycle: Starts step tracking and resets if needed
     override fun onResume() {
         super.onResume()
         stepCounterLifecycle.onResume(localClassName, stepCounterViewModel)
     }
 
+    // Pause lifecycle: Stops step tracking and saves data
     override fun onPause() {
         super.onPause()
         stepCounterLifecycle.onPause(localClassName, stepCounterViewModel)

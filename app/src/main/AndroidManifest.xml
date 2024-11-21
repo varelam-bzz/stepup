@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permission for step counting -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <application
@@ -15,26 +16,32 @@
         android:theme="@style/Theme.Stepup"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="31">
+
+        <!-- Main activity -->
         <activity
             android:name="ch.matiasfederico.stepup.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Stepup">
+            android:theme="@style/Theme.Stepup"
+            tools:ignore="DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Other activities -->
         <activity
             android:name="ch.matiasfederico.stepup.DetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi" />
         <activity
             android:name="ch.matiasfederico.stepup.UserActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi" />
         <activity
             android:name="ch.matiasfederico.stepup.CalorieActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi" />
     </application>
-
 </manifest>

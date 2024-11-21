@@ -23,16 +23,16 @@ class DetailsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enable edge-to-edge immersive display
 
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Header()
+                    Header() // Display the app header
                     DetailsScreen(
                         userViewModel = userViewModel, stepCounterViewModel = stepCounterViewModel
-                    )
-                    Footer(this, clearPreviousActivity = { this.finish() })
+                    ) // Main content for detailed step tracking
+                    Footer(this, clearPreviousActivity = { this.finish() }) // Footer navigation
                 }
             }
         }
@@ -40,11 +40,11 @@ class DetailsActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        stepCounterLifecycle.onResume(localClassName, stepCounterViewModel)
+        stepCounterLifecycle.onResume(localClassName, stepCounterViewModel) // Resume step tracking
     }
 
     override fun onPause() {
         super.onPause()
-        stepCounterLifecycle.onPause(localClassName, stepCounterViewModel)
+        stepCounterLifecycle.onPause(localClassName, stepCounterViewModel) // Pause step tracking
     }
 }

@@ -8,10 +8,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import ch.matiasfederico.stepup.ui.theme.StepupTheme
+import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.UserInputForm
-import ch.matiasfederico.stepup.ui.components.Footer
+import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 class UserActivity : ComponentActivity() {
@@ -19,14 +19,17 @@ class UserActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enables immersive edge-to-edge display
 
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Header()
-                    UserInputForm(this, userViewModel)
-                    Footer(this, clearPreviousActivity = { this.finish() })
+                    Header() // Displays the app's header with a logo
+                    UserInputForm(
+                        this, userViewModel
+                    ) // User input form for username and step goals
+                    Footer(this,
+                        clearPreviousActivity = { this.finish() }) // Bottom navigation footer
                 }
             }
         }

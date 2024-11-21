@@ -38,10 +38,10 @@ fun HomeScreen(
     userViewModel: UserViewModel,
     stepCounterViewModel: StepCounterViewModel
 ) {
-    val username by userViewModel.username.observeAsState("")
-    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
-    val steps by stepCounterViewModel.dailyStepCount.collectAsState()
-    val caloriesBurned = steps * 0.04f
+    val username by userViewModel.username.observeAsState("User") // Observe username changes
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0) // Observe daily step goal
+    val steps by stepCounterViewModel.dailyStepCount.collectAsState() // Collect daily steps
+    val caloriesBurned = steps * 0.04f // Calculate calories burned based on steps
 
     Column(
         modifier = Modifier
@@ -50,11 +50,11 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Greeting message
         Text(
-            text = if (username.isNotEmpty()) "Hello, $username!" else "Hello, User!",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold
+            text = "Hello, $username!", fontSize = 32.sp, fontWeight = FontWeight.Bold
         )
+        // Section title
         Text(
             text = "Daily Summary",
             fontSize = 32.sp,
@@ -64,19 +64,21 @@ fun HomeScreen(
 
         when {
             permission.status.isGranted -> {
-                CircularProgressWithLabel(
-                    steps = steps,
-                    dailyGoal = dailyStepGoal
-                )
+                // Show progress circular UI if permission is granted
+                CircularProgressWithLabel(steps = steps, dailyGoal = dailyStepGoal)
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    // Remaining steps
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Remaining", fontSize = 20.sp)
                         Text(text = "${max(dailyStepGoal - steps, 0)}", fontSize = 20.sp)
                     }
+                    // Calories burned
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "Calories", fontSize = 20.sp)
                         Text(text = "%.2f".format(caloriesBurned), fontSize = 20.sp)
@@ -85,25 +87,28 @@ fun HomeScreen(
             }
 
             permission.status.shouldShowRationale -> {
-                Button(onClick = {
-                    permission.launchPermissionRequest()
-                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))
+                // Show rationale for requesting permissions
+                Button(
+                    onClick = { permission.launchPermissionRequest() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))
                 ) {
                     Text(text = "Grant permission")
                 }
             }
 
             else -> {
-                Button(onClick = {
-                    permission.launchPermissionRequest()
-                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))) {
+                // Prompt to request permissions
+                Button(
+                    onClick = { permission.launchPermissionRequest() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))
+                ) {
                     Text(text = "Request permission")
                 }
             }
         }
-        Button(onClick = {
-            stepCounterViewModel.forceDailyResetForTesting()
-        }) {
+
+        // Button to simulate a day reset
+        Button(onClick = { stepCounterViewModel.forceDailyResetForTesting() }) {
             Text("Simulate Day Reset")
         }
     }
@@ -111,33 +116,29 @@ fun HomeScreen(
 
 @Composable
 fun CircularProgressWithLabel(steps: Int, dailyGoal: Int) {
-    val progress = steps.toFloat() / dailyGoal.toFloat()
+    val progress = steps.toFloat() / dailyGoal.toFloat() // Calculate progress as a fraction
 
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier
             .size(250.dp)
             .padding(16.dp)
     ) {
+        // Circular progress bar
         CircularProgressIndicator(
             progress = { progress.coerceIn(0f, 1f) },
             modifier = Modifier.size(230.dp),
             color = Color(0xFF206584),
             strokeWidth = 15.dp,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        // Steps label
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "$steps",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.Bold
+                text = "$steps", fontSize = 36.sp, fontWeight = FontWeight.Bold
             )
             Text(
-                text = "/ $dailyGoal",
-                fontSize = 24.sp,
-                color = Color.Gray
+                text = "/ $dailyGoal", fontSize = 24.sp, color = Color.Gray
             )
         }
     }

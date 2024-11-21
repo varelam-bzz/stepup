@@ -33,6 +33,7 @@ import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 fun calcBurnedCalories(steps: Int): Float {
+    // Helper function to calculate calories burned from steps
     return steps * 0.04f
 }
 
@@ -40,7 +41,7 @@ fun calcBurnedCalories(steps: Int): Float {
 fun DetailsScreen(
     userViewModel: UserViewModel, stepCounterViewModel: StepCounterViewModel
 ) {
-    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
+    val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0) // Observes daily step goal
     val dailySteps by stepCounterViewModel.dailyStepCount.collectAsState()
     val dailyCaloriesBurned = calcBurnedCalories(dailySteps)
 
@@ -57,6 +58,7 @@ fun DetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Daily Summary Card
         SummaryCard(
             title = "Daily Summary",
             steps = dailySteps,
@@ -65,6 +67,7 @@ fun DetailsScreen(
             goal = dailyStepGoal
         )
 
+        // Weekly Summary Card
         SummaryCard(
             title = "Weekly Summary",
             steps = weeklySteps,
@@ -73,6 +76,7 @@ fun DetailsScreen(
             goal = dailyStepGoal * 7
         )
 
+        // Monthly Summary Card
         SummaryCard(
             title = "Monthly Summary",
             steps = monthlySteps,
@@ -80,7 +84,6 @@ fun DetailsScreen(
             progress = monthlySteps.toFloat() / (dailyStepGoal * 30),
             goal = dailyStepGoal * 30
         )
-
     }
 }
 
@@ -92,6 +95,7 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Floa
         fontWeight = FontWeight.Bold,
         modifier = Modifier.fillMaxWidth()
     )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,20 +122,18 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Floa
                     text = "Steps:", fontSize = 12.sp, modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = "$steps / $goal",
-                    fontSize = 12.sp,
+                    text = "$steps / $goal", fontSize = 12.sp
                 )
             }
 
+            // Progress Bar
             LinearProgressIndicator(
                 progress = { progress.coerceIn(0f, 1f) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(16.dp)
                     .padding(vertical = 4.dp),
-                color = Color(
-                    0xFF206584
-                ),
+                color = Color(0xFF206584),
             )
 
             // Calories Row
@@ -141,13 +143,11 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Floa
                     .padding(top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
                     text = "Calories Burned:", fontSize = 12.sp, modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = "%.2f".format(caloriesBurned),
-                    fontSize = 12.sp,
+                    text = "%.2f".format(caloriesBurned), fontSize = 12.sp
                 )
             }
         }

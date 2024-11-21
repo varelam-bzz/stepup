@@ -30,8 +30,7 @@ import ch.matiasfederico.stepup.UserActivity
 
 @Composable
 fun Footer(
-    context: Context,
-    clearPreviousActivity: () -> Unit
+    context: Context, clearPreviousActivity: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -44,6 +43,7 @@ fun Footer(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+            // Home Button
             IconButton(onClick = {
                 if (context !is MainActivity) {
                     val intent = Intent(context, MainActivity::class.java)
@@ -57,6 +57,7 @@ fun Footer(
                 )
             }
 
+            // Details Button
             Box(
                 modifier = Modifier.padding(start = 32.dp, end = 32.dp)
             ) {
@@ -78,6 +79,7 @@ fun Footer(
                 }
             }
 
+            // User Button
             IconButton(onClick = {
                 if (context !is UserActivity) {
                     val intent = Intent(context, UserActivity::class.java)

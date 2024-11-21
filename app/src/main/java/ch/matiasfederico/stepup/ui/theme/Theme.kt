@@ -9,15 +9,12 @@ import androidx.compose.ui.platform.LocalContext
 
 // Define a light color scheme
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Purple40, secondary = PurpleGrey40, tertiary = Pink40
 )
 
 @Composable
 fun StepupTheme(
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    dynamicColor: Boolean = true, content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         // Use dynamic color scheme for API 31+
@@ -25,12 +22,11 @@ fun StepupTheme(
             val context = LocalContext.current
             dynamicLightColorScheme(context)
         }
+
         else -> LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = colorScheme, typography = Typography, content = content
     )
 }
