@@ -39,6 +39,7 @@ import kotlinx.coroutines.delay
 fun UserInputForm(context: Context, userViewModel: UserViewModel) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(false) }
     val username by userViewModel.username.observeAsState("")
     val dailyStepGoal by userViewModel.dailyStepGoal.observeAsState(0)
 
@@ -106,7 +107,7 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
             ShowToast(
                 context,
                 toastMessage,
-                true
+                isSuccess
             )
             LaunchedEffect(Unit) {
                 delay(Toast.LENGTH_LONG.toLong())
@@ -116,12 +117,14 @@ fun UserInputForm(context: Context, userViewModel: UserViewModel) {
 
         Button(
             onClick = {
-                showToast = true
-                toastMessage = if (userViewModel.savePreferences()) {
-                    "Successfully saved username and daily step goal!"
+                if (userViewModel.savePreferences()) {
+                    toastMessage = "Successfully saved username and daily step goal!"
+                    isSuccess = true
                 } else {
-                    "Failed to save username and daily step goal."
+                    toastMessage = "Failed to save username and daily step goal."
+                    isSuccess = false
                 }
+                showToast = true
             },
             modifier = Modifier
                 .fillMaxWidth()

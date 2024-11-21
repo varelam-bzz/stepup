@@ -35,14 +35,18 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun savePreferences(): Boolean {
         try {
             val usernameValue = username.value
-            if (usernameValue != null) {
-                sharedPreferences.edit().putString("username", usernameValue).apply()
+            if (usernameValue.isNullOrEmpty()) {
+                throw IllegalArgumentException("Username cannot be null or empty")
             } else {
-                throw IllegalArgumentException("Username cannot be null")
+                sharedPreferences.edit().putString("username", usernameValue).apply()
             }
 
             dailyStepGoal.value?.let {
-                sharedPreferences.edit().putInt("dailyStepGoal", it).apply()
+                if (it <= 0) {
+                    throw IllegalArgumentException("Daily Step Goal must be a positive number")
+                } else {
+                    sharedPreferences.edit().putInt("dailyStepGoal", it).apply()
+                }
             } ?: throw IllegalArgumentException("Daily Step Goal cannot be null")
             return true
         } catch (e: Exception) {

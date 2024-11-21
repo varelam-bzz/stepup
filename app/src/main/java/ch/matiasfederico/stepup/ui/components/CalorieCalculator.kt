@@ -34,6 +34,7 @@ import kotlinx.coroutines.delay
 fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
     var showToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
+    var isSuccess by remember { mutableStateOf(false) }
     var calories by remember { mutableIntStateOf(0) }
 
     Column(
@@ -70,7 +71,7 @@ fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
             ShowToast(
                 context,
                 toastMessage,
-                true
+                isSuccess
             )
             LaunchedEffect(Unit) {
                 delay(Toast.LENGTH_LONG.toLong())
@@ -82,10 +83,12 @@ fun CalorieCalculator(context: Context, userViewModel: UserViewModel) {
             onClick = {
                 showToast = true
                 userViewModel.saveDailyStepGoal(calories * 20)
-                toastMessage = if (userViewModel.savePreferences()) {
-                    "Successfully saved daily step goal!"
+                if (userViewModel.savePreferences()) {
+                    toastMessage = "Successfully saved daily step goal!"
+                    isSuccess = true
                 } else {
-                    "Failed to daily step goal."
+                    toastMessage = "Failed to save daily step goal."
+                    isSuccess = false
                 }
             },
             modifier = Modifier
