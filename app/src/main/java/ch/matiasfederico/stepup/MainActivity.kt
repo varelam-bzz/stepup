@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         userViewModel = userViewModel,
                         stepCounterViewModel = stepCounterViewModel
                     )
-                    Footer(this)
+                    Footer(this, clearPreviousActivity = { this.finish() })
                 }
             }
         }

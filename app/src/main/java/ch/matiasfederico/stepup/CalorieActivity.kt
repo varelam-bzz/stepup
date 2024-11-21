@@ -26,7 +26,7 @@ class CalorieActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
                     CalorieCalculator(this, userViewModel)
-                    Footer(this)
+                    Footer(this, clearPreviousActivity = { this.finish() })
                 }
             }
         }

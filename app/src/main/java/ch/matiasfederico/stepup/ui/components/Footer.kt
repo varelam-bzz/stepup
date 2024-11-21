@@ -31,6 +31,7 @@ import ch.matiasfederico.stepup.UserActivity
 @Composable
 fun Footer(
     context: Context,
+    clearPreviousActivity: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -48,6 +49,7 @@ fun Footer(
                     val intent = Intent(context, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     context.startActivity(intent)
+                    clearPreviousActivity()
                 }
             }) {
                 Icon(
@@ -63,6 +65,7 @@ fun Footer(
                         val intent = Intent(context, DetailsActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         context.startActivity(intent)
+                        clearPreviousActivity()
                     }
                 }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))) {
                     Row(
@@ -80,6 +83,7 @@ fun Footer(
                     val intent = Intent(context, UserActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     context.startActivity(intent)
+                    clearPreviousActivity()
                 }
             }) {
                 Icon(

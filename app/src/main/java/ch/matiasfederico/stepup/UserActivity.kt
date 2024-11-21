@@ -26,7 +26,7 @@ class UserActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Header()
                     UserInputForm(this, userViewModel)
-                    Footer(this)
+                    Footer(this, clearPreviousActivity = { this.finish() })
                 }
             }
         }

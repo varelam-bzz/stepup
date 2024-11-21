@@ -30,7 +30,7 @@ class DetailsActivity : ComponentActivity() {
                     DetailsScreen(
                         userViewModel = userViewModel, stepCounterViewModel = stepCounterViewModel
                     )
-                    Footer(this)
+                    Footer(this, clearPreviousActivity = { this.finish() })
                 }
             }
         }
