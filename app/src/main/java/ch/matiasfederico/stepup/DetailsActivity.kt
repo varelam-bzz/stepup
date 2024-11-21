@@ -12,12 +12,14 @@ import ch.matiasfederico.stepup.ui.components.DetailsScreen
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
+import ch.matiasfederico.stepup.util.StepCounterLifecycle
 import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 class DetailsActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()
     private val stepCounterViewModel: StepCounterViewModel by viewModels()
+    private val stepCounterLifecycle = StepCounterLifecycle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +40,11 @@ class DetailsActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        stepCounterViewModel.startTrackingSteps()
+        stepCounterLifecycle.onResume(localClassName, stepCounterViewModel)
     }
 
     override fun onPause() {
         super.onPause()
-        stepCounterViewModel.stopTrackingSteps()
+        stepCounterLifecycle.onPause(localClassName, stepCounterViewModel)
     }
 }
