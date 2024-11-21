@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import ch.matiasfederico.stepup.CalorieActivity
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember

@@ -12,7 +12,7 @@ import ch.matiasfederico.stepup.ui.components.CalorieCalculator
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 class CalorieActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()

@@ -12,8 +12,8 @@ import ch.matiasfederico.stepup.ui.components.DetailsScreen
 import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 class DetailsActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels()

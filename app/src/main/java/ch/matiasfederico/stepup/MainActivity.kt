@@ -14,8 +14,8 @@ import ch.matiasfederico.stepup.ui.components.Footer
 import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.HomeScreen
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
-import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 

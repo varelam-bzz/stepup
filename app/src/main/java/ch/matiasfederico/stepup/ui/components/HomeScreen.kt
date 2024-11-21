@@ -23,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted

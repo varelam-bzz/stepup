@@ -1,4 +1,4 @@
-package ch.matiasfederico.stepup.ui.viewmodels
+package ch.matiasfederico.stepup.viewmodels
 
 import android.app.Application
 import android.content.Context

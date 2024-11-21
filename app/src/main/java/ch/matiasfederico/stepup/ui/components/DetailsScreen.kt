@@ -29,8 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.matiasfederico.stepup.ui.viewmodels.StepCounterViewModel
-import ch.matiasfederico.stepup.ui.viewmodels.UserViewModel
+import ch.matiasfederico.stepup.viewmodels.StepCounterViewModel
+import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
 fun calcBurnedCalories(steps: Int): Float {
     return steps * 0.04f
