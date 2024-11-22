@@ -43,5 +43,9 @@
             android:name="ch.matiasfederico.stepup.CalorieActivity"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi" />
+        <activity
+            android:name="ch.matiasfederico.stepup.AdminActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi" />
     </application>
 </manifest>

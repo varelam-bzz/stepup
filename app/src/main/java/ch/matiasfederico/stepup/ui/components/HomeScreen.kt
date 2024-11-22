@@ -46,7 +46,7 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 80.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -107,11 +107,6 @@ fun HomeScreen(
                 }
             }
         }
-
-        // Button to simulate a day reset
-        Button(onClick = { stepCounterViewModel.forceDailyResetForTesting() }) {
-            Text("Simulate Day Reset")
-        }
     }
 }
 
@@ -128,7 +123,7 @@ fun CircularProgressWithLabel(steps: Int, dailyGoal: Int) {
         CircularProgressIndicator(
             progress = { progress.coerceIn(0f, 1f) },
             modifier = Modifier.size(230.dp),
-            color = Color(0xFF206584),
+            color = if (progress < 1f) Color(0xFF206584) else Color(0xFF4BB543),
             strokeWidth = 15.dp,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )

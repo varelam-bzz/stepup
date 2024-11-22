@@ -1,5 +1,6 @@
 package ch.matiasfederico.stepup
 
+import ch.matiasfederico.stepup.ui.components.Header
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +11,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import ch.matiasfederico.stepup.ui.components.CalorieCalculator
 import ch.matiasfederico.stepup.ui.components.Footer
-import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
 
@@ -24,7 +24,7 @@ class CalorieActivity : ComponentActivity() {
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Header() // Display the app header
+                    Header(this) // Display the app header
                     CalorieCalculator(this, userViewModel) // Display calorie calculator UI
                     Footer(this, clearPreviousActivity = { this.finish() }) // Footer navigation
                 }

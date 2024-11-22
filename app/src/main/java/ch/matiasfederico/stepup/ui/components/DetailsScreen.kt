@@ -133,7 +133,7 @@ fun SummaryCard(title: String, steps: Int, caloriesBurned: Float, progress: Floa
                     .fillMaxWidth()
                     .height(16.dp)
                     .padding(vertical = 4.dp),
-                color = Color(0xFF206584),
+                color = if (progress < 1f) Color(0xFF206584) else Color(0xFF4BB543),
             )
 
             // Calories Row

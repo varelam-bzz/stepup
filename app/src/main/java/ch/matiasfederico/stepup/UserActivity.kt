@@ -1,5 +1,6 @@
 package ch.matiasfederico.stepup
 
+import ch.matiasfederico.stepup.ui.components.Header
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import ch.matiasfederico.stepup.ui.components.Footer
-import ch.matiasfederico.stepup.ui.components.Header
 import ch.matiasfederico.stepup.ui.components.UserInputForm
 import ch.matiasfederico.stepup.ui.theme.StepupTheme
 import ch.matiasfederico.stepup.viewmodels.UserViewModel
@@ -24,12 +24,9 @@ class UserActivity : ComponentActivity() {
         setContent {
             StepupTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Header() // Displays the app's header with a logo
-                    UserInputForm(
-                        this, userViewModel
-                    ) // User input form for username and step goals
-                    Footer(this,
-                        clearPreviousActivity = { this.finish() }) // Bottom navigation footer
+                    Header(this) // Displays the app's header with a logo
+                    UserInputForm(this, userViewModel) // User input form for username and step goals
+                    Footer(this, clearPreviousActivity = { this.finish() }) // Bottom navigation footer
                 }
             }
         }
