@@ -55,7 +55,10 @@ fun Header(context: Context) {
                         if (clickCounter == 3) {
                             // Reset the counter and navigate to new activity
                             clickCounter = 0
-                            context.startActivity(Intent(context, AdminActivity::class.java))
+                            val intent = Intent(context, AdminActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            context.startActivity(intent)
                         }
                         // Reset counter after 1 second if not triple-clicked
                         scope.launch {
