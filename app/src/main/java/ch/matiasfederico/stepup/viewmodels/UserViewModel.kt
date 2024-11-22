@@ -13,7 +13,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences("StepupPrefs", Context.MODE_PRIVATE)
 
-    private val _username = MutableLiveData(sharedPreferences.getString("username", "") ?: "")
+    private val _username = MutableLiveData(sharedPreferences.getString("username", "User") ?: "")
     val username: LiveData<String> get() = _username // Observable username
 
     private val _dailyStepGoal = MutableLiveData(sharedPreferences.getInt("dailyStepGoal", 6000))

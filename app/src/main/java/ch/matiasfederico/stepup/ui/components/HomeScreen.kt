@@ -103,6 +103,7 @@ fun HomeScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF206584))
                 ) {
                     Text(text = "Request permission")
+                    // TODO move user to sign in screen
                 }
             }
         }
